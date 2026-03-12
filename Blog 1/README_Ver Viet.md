@@ -1,4 +1,4 @@
-# 1. Anomaly Detection là gì? – Khi những "kẻ lạc loài" lên tiếng
+<img width="210" height="29" alt="image" src="https://github.com/user-attachments/assets/991240b4-72ec-4055-b409-77a6d8755462" /># 1. Anomaly Detection là gì? – Khi những "kẻ lạc loài" lên tiếng
 
 Trong thế giới Data Science, chúng ta thường dành phần lớn thời gian để đi tìm những quy luật chung (patterns) – thứ giúp mô hình hiểu được số đông. Thế nhưng, đôi khi những giá trị "lệch chuẩn", những điểm dữ liệu "đi lạc" khỏi đám đông lại chính là nơi chứa đựng những thông tin đắt giá nhất. Đó chính là lãnh địa của **Anomaly Detection** (Phát hiện bất thường).
 
@@ -11,6 +11,59 @@ Tuy nhiên, cần phân biệt rõ: **Anomaly không phải là Nhiễu (Noise)*
 * **Giao dịch tài chính (Financial Transactions):** Giả sử lịch sử chi tiêu của bạn chỉ quẩn quanh các quán cà phê và siêu thị tại Việt Nam với hạn mức dưới 2 triệu đồng. Đột nhiên, một giao dịch 100 triệu đồng mua trang sức tại London xuất hiện. Thuật toán sẽ ngay lập tức gắn cờ (flag) điểm bất thường này để ngăn chặn hành vi chiếm đoạt tài khoản.
 * **An ninh mạng (Cybersecurity):** Một server đang hoạt động ổn định bỗng dưng nhận được lượng request tăng vọt theo cấp số nhân trong vài giây (Spike). Đây không đơn giản là sự tăng trưởng người dùng, mà là dấu hiệu của một cuộc tấn công DDoS đang trực chờ đánh sập hệ thống.
 * **Giám sát công nghiệp (Industrial IoT):** Trong một dây chuyền sản xuất, các cảm biến rung động (Vibration Sensors) gửi về tín hiệu đều đặn. Một sự thay đổi nhỏ trong biên độ sóng có thể là "lời cầu cứu" của vòng bi sắp hỏng trước khi máy móc thực sự đổ vỡ.
+
+# 2. Sự quan trọng của Anomaly Detection và ứng dụng
+## 2.1. Tại sao Anomaly Detection quan trọng?
+Hiện nay với sự phát triển không ngừng của xã hội, dữ liệu đóng vai trò lớn, biểu thị sự phát triển hay vận hành của nhiều lĩnh vực, sự gia tăng về dữ liệu cũng dẫn theo nguy cơ về sai sót và bất thường ngày càng tăng cao. Việc phát hiện sớm các điểm bất thường này có thể giúp các tổ chức, doanh nghiệp xử lí kịp thời vấn đề về sai sót dữ liệu, từ đó đưa ra giải pháp nâng cấp, bảo trì phù hợp, tối ưu hóa chi phí vận hành. Thông qua anomaly detection, một số lợi ích ta có thể đạt được như:
+- Phát hiện gian lận
+- Phát hiện lỗi hệ thống
+- Phát hiện tấn công mạng
+
+## 2.2. Những ứng dụng của Anomaly Detection
+### 2.2.1. Phát hiện gian lận tài chính
+Trong lĩnh vực tài chính, việc phát hiện các điểm bất thường trong giao dịch có thể giúp doanh nghiệp phát hiện kịp thời các giao dịch mang tính gian lận, từ đó doanh nghiệp có thể bảo vệ khách hàng cũng như giảm thiểu rủi ro về tổn thất tài chính. Ứng dụng cụ thể có thể kể đến:
+- Transaction fraud:
+* Hành vi cố tình sử dụng thông tin tài chính bị đánh cắp để thực hiện các giao dịch mua sắm, chuyển tiền trái phép. Thông qua việc phân tích các điểm bất thường trong dữ liệu giao dịch, ngân hàng có thể can thiệp kịp thời và ngăn chặn các giao dịch trái phép, khả nghi cho khách hàng.
+- Credit card fraud:
+* Thông tin tín dụng cá nhân rất dễ bị đánh cắp, vì vậy anomaly detection có thể được ứng dụng để truy vết các giao dịch tín dụng từ IP lạ hay các giao dịch lớn bất thường so với thường lệ. Từ đó ngân hàng có thể ngăn chặn các giao dịch này, đảm bảo quyền lợi và thiệt hại tài chính của chủ thẻ.
+
+### 2.2.2. An ninh mạng
+Trong lĩnh vực an ninh mạng, việc phát hiện các truy cập khả nghi hay request bất thường có thể giúp tìm ra lỗ hổng bảo mật hiện có, từ đó có ngăn chặn kịp thời các cuộc tấn công mạng, nâng cao bảo mật của hệ thống mạng máy tính.
+
+- Network intrusion: 
+* Thông qua giám sát lưu lượng truy cập mạng bất thường của một truy cập, hệ thống có thể đưa ra cảnh báo đến người quản trị, ngăn chặn việc xâm nhập mạng bất thường.
+
+- Abnormal login activity:
+* Đề cập đến các truy cập không rõ nguồn gốc, không được cấp phép hay từ các thiết bị mới. Thông qua nhận diện các truy cập này, hệ thống có thể gửi cảnh báo để người dùng về một rủi ro về bảo mật tài khoản hiện tại.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/part2_cybersecurity.png style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 2.1. Anomalies trong an ninh mạng</em>
+</p>
+
+### 2.2.3. Industrial monitoring:
+Trong hệ thống máy công nghiệp, các thiết bị có thể đọc ghi các kết quả sai theo thời gian. Việc phát hiện sớm các sai sót về dữ liệu như sensor có thể giúp doanh nghiệp tìm nguyên nhân và sửa chữa kịp thời, đảm bảo tính ổn định của hệ thống.
+
+- Lỗi máy móc: 
+* Một hư hỏng về bộ phận bất kì trong máy sản xuất cũng có thể ảnh hưởng đến các thiết bị khác. Ví dụ như hệ thống laser của một máy cắt laser khi bị lỗi có thể cấp nhiệt quá mức cho phép, từ đó gây ra sai số dữ liệu cho sensor nhiệt. Việc phát hiện bất thường trong dữ liệu đọc ghi từ các thiết bị này có thể giúp doanh nghiệp truy vết được các vấn đề khác, từ đó bảo trì máy được tốt hơn.
+- Sai số điều khiển:
+* Trong lĩnh vực điều khiển, các dữ liệu về motor có thể phản ánh tính chính xác của bộ điều khiển, việc phân tích các dữ liệu có thể giúp tìm ra hạn chế về thiết kế hiện tại và tối ưu hệ thống.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/part2_industrial.png style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 2.2. Anomaly trong dữ liệu sensor</em>
+</p>
+
+### 2.2.4. Healthcare:
+Trong lĩnh vực y tế, các dữ liệu về bệnh nhân rất quan trọng cho việc theo dõi sức khỏe bệnh nhân. Thông qua các dữ liệu này, bác sĩ có thể theo dõi các chuyển biến về sức khỏe và cung cấp các giải pháp y tế kịp thời. 
+- Dữ liệu y tế:
+* Các dữ liệu như mỡ máu, huyết áp bất thường giúp bác sĩ tầm soát các bệnh lí có thể xảy ra ở bệnh nhân, qua đó hỗ trợ chuẩn đoán bệnh và phòng ngừa.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/part2_healthcare.png style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 2.3. Anomaly trong dữ liệu y tế</em>
+</p>
+
 
 # 5. Những hạn chế thực tế trong việc phát hiện bất thường (Anomaly Detection)
 Mặc dù anomaly detection là một kỹ thuật rất quan trọng trong data science, việc phát hiện các mẫu dữ liệu bất thường trong dữ liệu thực tế thường gặp nhiều khó khăn. Trong nhiều hệ thống, anomaly xảy ra rất hiếm, dữ liệu có thể thay đổi theo thời gian, và tập dữ liệu có thể chứa rất nhiều đặc trưng khác nhau. Những yếu tố này khiến các thuật toán khó phân biệt chính xác giữa hành vi bình thường và hành vi bất thường.
