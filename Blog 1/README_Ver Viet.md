@@ -1,5 +1,3 @@
-<img width="792" height="46" alt="image" src="https://github.com/user-attachments/assets/87696ad9-80b0-4168-9e40-fdbb3f2b9427" /><img width="210" height="29" alt="image" src="https://github.com/user-attachments/assets/991240b4-72ec-4055-b409-77a6d8755462" />
-
 # 1. Anomaly Detection là gì? – Khi những "kẻ lạc loài" lên tiếng
 
 Trong thế giới Data Science, chúng ta thường dành phần lớn thời gian để đi tìm những quy luật chung (patterns) – thứ giúp mô hình hiểu được số đông. Thế nhưng, đôi khi những giá trị "lệch chuẩn", những điểm dữ liệu "đi lạc" khỏi đám đông lại chính là nơi chứa đựng những thông tin đắt giá nhất. Đó chính là lãnh địa của **Anomaly Detection** (Phát hiện bất thường).
