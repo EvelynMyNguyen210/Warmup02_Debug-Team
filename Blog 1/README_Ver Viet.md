@@ -1,4 +1,6 @@
-<img width="210" height="29" alt="image" src="https://github.com/user-attachments/assets/991240b4-72ec-4055-b409-77a6d8755462" /># 1. Anomaly Detection là gì? – Khi những "kẻ lạc loài" lên tiếng
+<img width="210" height="29" alt="image" src="https://github.com/user-attachments/assets/991240b4-72ec-4055-b409-77a6d8755462" />
+
+# 1. Anomaly Detection là gì? – Khi những "kẻ lạc loài" lên tiếng
 
 Trong thế giới Data Science, chúng ta thường dành phần lớn thời gian để đi tìm những quy luật chung (patterns) – thứ giúp mô hình hiểu được số đông. Thế nhưng, đôi khi những giá trị "lệch chuẩn", những điểm dữ liệu "đi lạc" khỏi đám đông lại chính là nơi chứa đựng những thông tin đắt giá nhất. Đó chính là lãnh địa của **Anomaly Detection** (Phát hiện bất thường).
 
@@ -67,6 +69,41 @@ Trong lĩnh vực y tế, các dữ liệu về bệnh nhân rất quan trọng 
   <em>Hình 2.3. Anomaly trong dữ liệu y tế</em>
 </p>
 
+# 3. Phân loại Anomaly
+
+*Trong Data Science, để chọn đúng phương pháp xử lý, chúng ta cần nhận biết các điểm bất thường (anomalies) dưới hai góc độ: Nguyên nhân sinh ra chúng và cách biểu hiện trong tập dữ liệu.*
+
+## 3.1. Phân loại theo nguyên nhân
+
+Hệ thống phát hiện bất thường có thể phát hiện hai loại bất thường chính: bất thường không chủ đích và bất thường có chủ đích.
+
+### 1. Bất thường ngoài ý muốn (Unintentional anomalies)
+
+Những bất thường không cố ý là các điểm dữ liệu lệch khỏi mức bình thường do lỗi hoặc nhiễu trong quá trình thu thập dữ liệu. Những lỗi này có thể là có hệ thống hoặc ngẫu nhiên, thường xuất phát từ các vấn đề như cảm biến bị lỗi hoặc sai sót của con người khi nhập dữ liệu. Các bất thường không cố ý này có thể làm méo mó bộ dữ liệu, khiến việc rút ra kết luận chính xác từ dữ liệu trở nên khó khăn hơn.
+
+Ví dụ:
+
+ - **Lỗi thu thập dữ liệu**: Một nhân viên nhập liệu vô tình gõ dư một số "0", biến giao dịch 1.000.000 VNĐ thành 10.000.000 VNĐ.
+
+ - **Lỗi phần cứng**: Một cảm biến nhiệt độ bị chập mạch do trời mưa, gửi về hệ thống mức nhiệt 100°C.
+
+ - **Sự kiện ngẫu nhiên**: Một bài đăng trên mạng xã hội đột nhiên "viral" khiến lưu lượng truy cập tăng gấp nhiều lần bình thường.
+
+
+ <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/part2_healthcare.png/3_1_social_viral.png" style="margin: 0 auto; display: block;"><br/>
+   <em>Hình 3.1. Bài hát đột nhiên lan truyền mạnh khiến lượt nhắc đến tăng vọt; nguồn:  <a href="https://www.talkwalker.com/blog/trend-analysis-life-of-a-showgirl">Talkwalker Social Listening</a> </em>
+ </p>
+
+### 2. Bất thường có chủ đích (Intentional anomalies)
+ Bất thường có chủ đích là những điểm dữ liệu khác biệt do một sự kiện hoặc hành động cụ thể, thường mang ý nghĩa quan trọng. Những bất thường này đôi khi lại rất có giá trị, vì chúng có thể cho thấy những hiện tượng đặc biệt hoặc xu hướng đáng chú ý trong bộ dữ liệu.
+
+ Ví dụ doanh số bán hàng tăng vọt vào các đợt sale có thể được xem là một intentional anomaly. Mặc dù nó khác với dữ liệu doanh số thông thường, nhưng sự tăng đột biến này là điều có thể dự đoán được vì nó gắn với một sự kiện thực tế và thường được chuẩn bị trước.
+
+  <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/part2_healthcare.png/3_2_Intentional_anomalies.png" style="margin: 0 auto; display: block;"><br/>
+   <em>Hình 3.2. Doanh số tăng vọt trong đợt sale, một dạng bất thường có chủ đích trong dữ liệu. </em>
+ </p>
 
 # 5. Những hạn chế thực tế trong việc phát hiện bất thường (Anomaly Detection)
 Mặc dù anomaly detection là một kỹ thuật rất quan trọng trong data science, việc phát hiện các mẫu dữ liệu bất thường trong dữ liệu thực tế thường gặp nhiều khó khăn. Trong nhiều hệ thống, anomaly xảy ra rất hiếm, dữ liệu có thể thay đổi theo thời gian, và tập dữ liệu có thể chứa rất nhiều đặc trưng khác nhau. Những yếu tố này khiến các thuật toán khó phân biệt chính xác giữa hành vi bình thường và hành vi bất thường.
