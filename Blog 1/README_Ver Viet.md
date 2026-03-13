@@ -4,7 +4,7 @@ Trong thế giới Data Science, chúng ta thường dành phần lớn thời g
 
 Nói một cách kỹ thuật, **Anomaly Detection** là quá trình xác định các điểm dữ liệu có đặc tính phân phối khác biệt đáng kể so với phần còn lại của tập dữ liệu. Trong thống kê, chúng ta gọi chúng là các **Outliers** (những mẫu ngoại lệ). 
 
-Tuy nhiên, cần phân biệt rõ: **Anomaly không phải là Nhiễu (Noise)**. Nếu nhiễu là những sai số ngẫu nhiên cần được loại bỏ trong quá trình tiền xử lý (Data Cleaning), thì **Anomaly** lại là những tín hiệu thực sự, báo hiệu một sự thay đổi đột ngột hoặc một hành vi đặc biệt trong hệ thống.
+Tuy nhiên, cần phân biệt rõ: **Anomaly không hoàn toàn là Nhiễu (Noise)**. Nếu nhiễu là những sai số ngẫu nhiên cần được loại bỏ trong quá trình tiền xử lý (Data Cleaning), thì **Anomaly** lại là những tín hiệu thực sự, báo hiệu một sự thay đổi đột ngột hoặc một hành vi đặc biệt trong hệ thống.
 
 Để thấy rõ tầm quan trọng của những "kẻ lạc loài" này, hãy nhìn vào các bài toán thực tế:
 
