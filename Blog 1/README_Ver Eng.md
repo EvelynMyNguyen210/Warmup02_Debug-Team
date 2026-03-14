@@ -48,6 +48,104 @@ In the healthcare sector, patient data plays a crucial role in monitoring health
   <em>Figure 2.3. Anomaly in medical data; source: <a href="https://unit8.com/resources/anomaly-detection-in-healthcare-data-with-darts/">Unit8</a></em>
 </p>
 
+# 3. Types of anomalies
+
+*In data science, choosing the appropriate method for handling anomalies requires understanding them from two perspectives: the causes that generate them and how they appear within a dataset.*
+
+## 3.1. Classification by Cause
+
+Anomaly detection systems typically identify two main types of anomalies: unintentional anomalies and intentional anomalies.
+
+### 3.1.1. Unintentional anomalies
+
+Unintentional anomalies are data points that deviate from the norm due to errors or noise in the data collection process. These errors can be either systematic or random, originating from issues like faulty sensors or human error during data entry. Unintentional anomalies can distort the data set, making it challenging to derive accurate insights.
+
+**Examples:**
+
+- **Data collection error:** A data entry employee accidentally types an extra “0”, turning a transaction of 1.000.000 VND into 10.000.000 VND.
+
+- **Hardware failure:** A temperature sensor short-circuits during heavy rain and reports a reading of 100 °C to the system.
+
+- **Random event:** A social media post suddenly goes viral, causing traffic or mentions to increase several times above the normal level.
+
+
+ <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/3_1_social_viral.png" style="margin: 0 auto; display: block;"><br/>
+   <em>Figure 3.1. A song suddenly goes viral, leading to a sharp spike in mentions; source:  <a href="https://www.talkwalker.com/blog/trend-analysis-life-of-a-showgirl">Talkwalker Social Listening</a> </em>
+ </p>
+
+### 3.1.2. Intentional anomalies
+
+Intentional anomalies are data points that deviate from the norm due to specific actions or events. These anomalies can provide valuable insights into the data set, as they may highlight unique occurrences or trends. For example, a sudden spike in sales during a holiday season could be considered an intentional anomaly, as it deviates from the typical sales pattern but is expected due to a real-world event.
+
+For example, a sudden spike in sales during a promotional campaign or holiday season may appear anomalous when compared to regular sales patterns. However, this increase is expected because it is driven by a planned event and often prepared for in advance.
+
+<p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/3_2_Intentional_anomalies.jpg" style="margin: 0 auto; display: block;"><br/>
+   <em>Figure 3.2. A spike in sales during a promotional campaign, an example of intentional anomalies in data.</em>
+</p>
+
+## 3.2 Classification by Data Manifestation
+Another important aspect of anomaly detection is the nature of the anomaly itself—specifically, how it appears within the dataset. Based on their manifestation in the data, anomalies are commonly categorized into three main types:
+
+### 3.2.1. Point Anomalies
+A point anomaly occurs when a single data point deviates significantly from the rest of the dataset. In simpler terms, if a single observation appears clearly different from other observations, it can be considered a point anomaly.
+
+This is the simplest and most widely studied type of anomaly in anomaly detection research. The reason is that such anomalies are relatively intuitive: detecting them often involves comparing an individual data point with the overall distribution of the dataset to determine whether it falls outside the normal range.
+
+In the figure below, points such as $o_1$, $o_2$, or points located in region $O_3$ are typically considered anomalous because they lie outside the boundary of the normal data region. Therefore, they are classified as point anomalies.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/3_3_Point_Anomalies.png style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 3.3. A simple illustration of anomalous points in a two-dimensional dataset; source: <a href="https://doi.org/10.1145/1541880.1541882">Chandola, Banerjee, and Kumar (2009) – Anomaly Detection: A Survey</a></em>
+</p>
+
+A common real-world example of a point anomaly appears in credit card fraud detection systems. For instance, a customer may typically spend between 200.000 and 1.000.000 VND per transaction. If a transaction of 30.000.000 VND suddenly occurs, it deviates significantly from the user's historical spending pattern. Such a transaction may therefore be flagged as a point anomaly for further investigation.
+
+### 3.2.2. Contextual Anomalies
+
+A data point is considered a contextual anomaly when it appears anomalous only within a specific context but not in other contexts. This type of anomaly is also referred to as a **conditional anomaly** (Song et al., 2007).
+
+The notion of a context is induced by the structure in the data set and has to bespeciﬁed as a part of the problem formulation. Each data instance is deﬁned using thefollowing two sets of attributes:
+
+**(1) Contextual attributes **
+
+Contextual attributes define the context or neighborhood in which a data point is observed.
+
+Examples:
+
+- In **spatial data**, the longitude and latitude of a location serve as contextual attributes.
+
+- In **time-series data**, time acts as a contextual attribute because it determines the position of an observation within the sequence. 
+
+**(2) Behavioral attributes**
+
+Behavioral attributes describe the actual characteristics or measurements of a data point, independent of the context.
+
+Example:
+
+- In a spatial dataset describing average rainfall across the world, the rainfall amount at each location is a behavioral attribute.
+
+Determining whether a data point is anomalous depends on the value of its behavioral attributes within a specific context. A data point may be considered anomalous in one context but completely normal in another, even if its behavioral value remains the same. This distinction between contextual and behavioral attributes is fundamental to contextual anomaly detection methods.
+
+The figure below illustrates such a scenario using a temperature time series that represents monthly temperatures in a region over several years. A temperature of 35°F may be normal during winter (at time $t_1$) in that region, but the same value during summer (at time $t_2$) would be considered anomalous.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/3_4_Contextual_Anomalies.png style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 3.4. Example of contextual anomalies in a temperature time series. source: <a href="https://doi.org/10.1145/1541880.1541882">Chandola, Banerjee, and Kumar (2009) – Anomaly Detection: A Survey</a></em>
+</p>
+
+### 3.2.3. Collective Anomalies
+
+A collective anomaly occurs when a group of related data points is considered anomalous with respect to the entire dataset. In this case, individual data points may not appear anomalous when examined separately; however, their occurrence together as a group forms an unusual pattern.
+
+The figure below illustrates an example from a human electrocardiogram (ECG) signal (Goldberger et al., 2000). The highlighted region is considered anomalous because the signal remains at a low value for an unusually long period, which corresponds to the phenomenon known as **Atrial Premature Contraction**. Note that the low value itself is not inherently anomalous; rather, the anomaly arises from the prolonged sequence of such values over time.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/3_5_Collective_Anomalies.png style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 3.5. Example of a collective anomaly in an electrocardiogram (ECG) signal. source: <a href="https://doi.org/10.1145/1541880.1541882">Chandola, Banerjee, and Kumar (2009) – Anomaly Detection: A Survey</a></em>
+</p>
+
 # 4. Common methods for Anomaly Detection
 
 The rapid increase in data from various sources has made anomaly detection increasingly essential for identifying unusual observations that may signal system errors, security breaches, or fraud. Currently, there are many anomaly detection methods, ranging from simple to complex, and from traditional to modern. Each method has its own advantages and disadvantages. Depending on the type of data and the purpose, businesses and organizations will choose the most suitable method.
