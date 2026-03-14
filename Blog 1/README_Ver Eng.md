@@ -194,6 +194,101 @@ The integration of traditional and deep learning methods aims to leverage the ex
 
 In this approach, we typically use deep learning models to extract complex, multidimensional features; then, using algorithms such as clustering or support vector machines, we can classify and detect anomalies.
 
+# 5. Challenges in Anomaly Detection
+## 5.1 Imbalanced Data
+One of the most common challenges in anomaly detection is **imbalanced data.**
+
+In many real-world problems, anomalous data represents only a very small proportion of the total dataset. For example, in financial transaction data, fraudulent transactions typically account for only a tiny fraction of all transactions.
+
+Example:
+
+Normal transactions: 99,9%
+
+Fraudulent transactions: 0,1%
+
+This imbalance can cause traditional machine learning models to focus primarily on the majority class (normal data). As a result, a model may **achieve very high accuracy** while still **failing to detect anomalies.**
+
+For instance, if a model predicts every transaction as normal, it could still achieve an accuracy of 99,9% in the example above, even though it fails to identify any fraudulent transactions.
+
+To address this issue, data scientists often apply techniques such as sampling methods (e.g., oversampling the minority class) or employ specialized anomaly detection algorithms to improve the detection of rare events.
+
+ <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/Imbalanced Data.png" style="margin: 0 auto; display: block;"><br/>
+     <em>Figure 5.1. Imbalanced data; Source: <a href="https://deepgram.com/ai-glossary/imbalanced-data?utm_source=chatgpt.com
+">DeepGram</a> </em>
+ </p></em>
+ </p>
+
+## 5.2 Evolving Patterns
+Another challenge is that anomalous behavior is **not static and may change over time.**
+
+In machine learning, this phenomenon is commonly referred to as **concept drift**, where the statistical properties of the data evolve over time. When this occurs, models trained on historical data may become less effective when applied to new data.
+
+A clear example can be observed in **financial fraud detection systems**. Fraudsters continuously modify their strategies in order to bypass security mechanisms. Once a particular fraud pattern becomes detectable and is blocked, attackers often develop new methods to carry out fraudulent activities.
+
+As a result, real-world anomaly detection systems typically require:
+
+- continuous monitoring of model performance
+  
+- regular updates with new data
+  
+- periodic model retraining
+
+These practices help ensure that the system remains effective in detecting anomalies within a constantly changing data environment.
+
+ <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/Evolving Patternts.png" style="margin: 0 auto; display: block;"><br/>
+     <em>Figure 5.2. Evolving data patterns over time; Source: <a href="https://www.evidentlyai.com/ml-in-production/data-drift?utm_source=chatgpt.com
+">EVIDENTLY AI</a> </em>
+ </p></em>
+ </p>
+
+## 5.3 High-Dimensional Data
+Another challenge arises when datasets contain a **large number of features.**
+
+For example, a transaction record may include several attributes such as:
+
+- transaction amount
+  
+- transaction time
+  
+- geographic location
+  
+- device information
+  
+- user behavior history
+  
+- payment method
+  
+As the number of features increases, anomaly detection becomes more difficult due to a phenomenon known as the **curse of dimensionality.**
+
+In high-dimensional spaces, the distance between data points becomes less meaningful. Data points may appear similarly distant from one another, making it harder for algorithms to distinguish between normal and anomalous behavior.
+
+Additionally, high-dimensional datasets increase computational complexity and may contain irrelevant or noisy features that negatively affect model performance.
+
+To address this issue, data scientists often apply techniques such as **feature selection** or **dimensionality reduction**, like Principal Component Analysis (PCA).
+
+<p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/High-Dimensionnal.png" style="margin: 0 auto; display: block;"><br/>
+     <em>Figure 5.3. High-Dimensional data representation</em>; Source: <a href="https://www.researchgate.net/figure/Credit-card-fraud-detection-dataset-The-dataset-is-obtained-by-doing-PCA-to-the-Kaggle_fig9_369404230">ResearchGate</a> </em>
+ </p></em>
+ </p>
+
+## 5.4 Real-Time Detection Requirements
+In many real-world applications, anomaly detection systems must **operate in real time.**
+
+For example, in credit card fraud detection or cybersecurity systems, anomalies must be identified immediately in order to prevent potential damage. If detection occurs too late, the consequences can be significant.
+
+Consider a scenario where a credit card is used in two geographically distant locations within a very short time interval. This unusual behavior may indicate a potential fraud attempt, and the system must quickly flag the transaction for further verification.
+
+Therefore, anomaly detection systems must **balance accuracy, processing speed, and computational cost**, particularly when dealing with large-scale datasets or streaming data.
+
+ <p align="center">
+   <img src="https://github.com/EvelynMyNguyen210/Warmup02_Blog1/blob/main/Collection/Real-Time Detection.png" style="margin: 0 auto; display: block;"><br/>
+     <em>Figure 5.4. Real-time anomaly detection requirements</em>; Source: <a href="https://www.researchgate.net/figure/The-architecture-of-the-proposed-credit-card-fraud-detection-model_fig4_356779990">ResearchGate</a> </em>
+ </p></em>
+ </p>
+
 # References
 
 Aggarwal, C. C. (2017). *Outlier analysis (2nd ed.)*. Springer.
