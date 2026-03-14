@@ -1,3 +1,17 @@
+# 1. What is Anomaly Detection? – When "Outliers" Speak Up
+
+In the world of Data Science, we often spend most of our time searching for common patterns—the rules that help models understand the majority. However, sometimes the "deviants," the data points that stray from the crowd, are exactly where the most valuable insights are hidden. This is the realm of **Anomaly Detection**.
+
+In technical terms, **Anomaly Detection** is the process of identifying data points (observations) that possess distribution characteristics significantly different from the rest of the dataset. In statistics, we call these **Outliers**. 
+
+However, it is crucial to distinguish: **Anomaly is not merely Noise.**. While noise represents random errors that should be removed during the preprocessing phase (Data Cleaning), an **Anomaly** is a genuine signal. it signals a sudden change, a rare event, or a specific behavior within the system that demands attention.
+
+To see the critical importance of these "strays," let’s look at real-world scenarios:
+
+* **Financial Transactions:** Suppose your spending history revolves around cafes and supermarkets in Vietnam with a limit under $100. Suddenly, a $5,000 transaction for jewelry in London appears. The algorithm will immediately flag this anomaly to prevent potential account takeover.
+* **Cybersecurity:** A server is operating stably when it suddenly receives an exponential spike in requests within seconds. This isn't just organic user growth; it is the fingerprint of a DDoS attack threatening to crash the infrastructure.
+* **Industrial IoT:** In a production line, vibration sensors send back steady signals. A minute change in wave amplitude might be the "cry for help" from a failing bearing, allowing for maintenance before a catastrophic machine breakdown occurs.
+
 # 2. The Importance of Anomaly Detection and its Applications
 ## 2.1. Why is Anomaly Detection Important?
 With the continuous development of modern society, data plays a crucial role in representing the growth and operation of many fields. The rapid increase in data also leads to a higher risk of errors and anomalies. Early detection of these anomalies can help organizations and businesses quickly address data-related issues, allowing them to implement appropriate upgrades, maintenance strategies, and optimize operational costs. Through anomaly detection, several benefits can be achieved such as:
@@ -386,6 +400,12 @@ Therefore, anomaly detection systems must **balance accuracy, processing speed, 
      <em>Figure 5.4. Real-time anomaly detection requirements</em>; Source: <a href="https://www.researchgate.net/figure/The-architecture-of-the-proposed-credit-card-fraud-detection-model_fig4_356779990">ResearchGate</a> </em>
  </p></em>
  </p>
+
+# 6. Conclusion
+
+The journey of decoding data is not just about finding similarities; it is about learning to listen to the signals that stand out. **Anomaly Detection** acts as the "sharp eye" that ensures Data Science systems don't miss critical moments—from stopping a sophisticated financial fraud to shielding digital infrastructure from hidden attacks. 
+
+Whether you utilize traditional statistical methods or modern Deep Learning architectures like **Autoencoders** and **Isolation Forest**, the ultimate goal remains the same: turning "black dots" of abnormality into precise, actionable decisions. But how do we bring these theories into the volatile, real-world banking industry? In our next post (**Blog 2**), we will go "hands-on" with specific Machine Learning techniques to build a Fraud Detection system for banks. Stay tuned!
 
 # References
 
