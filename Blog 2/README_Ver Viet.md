@@ -1,3 +1,24 @@
+## **1. Giới thiệu**
+
+Trong kỉ nguyên số hóa, sự bùng nổ của mobile banking, thương mại điện tử và các hình thức thanh toán trực tuyến đã mang lại sự tiện lợi chưa từng có cho người dùng. Tuy nhiên, mặt trái của sự phát triển này là sự gia tăng chóng mặt của các hình thức gian lận tài chính với thủ đoạn ngày càng tinh vi và phức tạp. Từ những vụ đánh cắp thông tin thẻ tín dụng, tấn công giả mạo (phishing), cho đến chiếm đoạt quyền kiểm soát tài khoản (account takeover), tội phạm mạng đang đặt ra thách thức nghiêm trọng cho toàn bộ hệ thống tài chính toàn cầu.
+
+Theo dữ liệu mới nhất được Federal Trade Commission (FTC) công bố vào tháng 3/2025, người tiêu dùng đã chịu mức thiệt hại kỷ lục lên tới 12,5 tỷ USD trong năm 2024, tăng trưởng nóng 25% chỉ sau một năm. Đáng báo động hơn, tỷ lệ các vụ lừa đảo dẫn đến mất mát tài sản thực tế đã tăng từ 27% lên 38%, cho thấy tội phạm mạng không chỉ gia tăng về quy mô mà còn tối ưu hóa hiệu quả tấn công thông qua các kỹ thuật như phishing hay chiếm quyền tài khoản. Đáng ngại hơn, các cuộc tấn công này thường diễn ra trong tích tắc &ndash; tính bằng mili giây &ndash; khiến các phương thức kiểm tra thủ công truyền thống hoàn toàn bất lực trong việc ngăn chặn.
+
+Trước bối cảnh đó, việc ứng dụng Học máy (Machine Learning) đã trở thành "vũ khí" then chốt, giúp các ngân hàng nhận diện và ngăn chặn hành vi xâm nhập trái phép ngay từ khi giao dịch chưa kịp hoàn tất, bảo vệ an toàn tối đa cho tài sản của khách hàng.
+
+## **2. Phát hiện gian lận trong ngân hàng là gì?**
+
+Trong lĩnh vực ngân hàng, Phát hiện gian lận (Fraud detection) được hiểu là một hệ thống các quy trình và công nghệ nhằm nhận diện, phân tích và ngăn chặn các giao dịch bất thường hoặc có dấu hiệu nghi vấn. Mục tiêu cốt lõi của quá trình này là bảo vệ tài sản của khách hàng và hạn chế tối đa tổn thất tài chính cũng như uy tín cho ngân hàng.
+
+Hiện nay, các hình thức gian lận ngày càng tinh vi, bao gồm các loại hình phổ biến như:
+
+- **Credit card fraud:** Sử dụng trái phép thông tin thẻ để thanh toán hoặc rút tiền.
+- **Identity theft:** Đánh cắp thông tin cá nhân (CCCD, số điện thoại) để mở tài khoản hoặc vay vốn bất chính.
+- **Account takeover (ATO):** Kẻ gian chiếm quyền điều khiển tài khoản ngân hàng trực tuyến của khách hàng thông qua mã độc hoặc lừa đảo.
+- **Money laundering:** Các giao dịch phức tạp nhằm hợp thức hóa nguồn tiền bất hợp pháp.
+- **Phishing & Social Engineering:** Lừa đảo qua tin nhắn, cuộc gọi giả danh nhân viên ngân hàng để dụ người dùng cung cấp mã OTP hoặc mật khẩu.
+- **APP Fraud (Authorised Push Payment):** Kẻ gian lừa nạn nhân tự nguyện chuyển tiền vào một tài khoản giả mạo (thường thấy trong các kịch bản lừa đảo trúng thưởng hoặc đầu tư tài chính).
+
 # 3. Vì sao phương pháp phát hiện gian lận truyền thống không còn đủ hiệu quả
 Trước khi machine learning được áp dụng rộng rãi, phần lớn ngân hàng sử dụng các **hệ thống dựa trên luật (rule-based systems)** để phát hiện giao dịch đáng ngờ. Các hệ thống này hoạt động bằng cách áp dụng những quy tắc được thiết lập sẵn bởi các chuyên gia phân tích.
 
@@ -204,6 +225,7 @@ Cách tiếp cận kết hợp này còn tạo ra một vòng lặp phản hồi
 # Tài liệu tham khảo
 
 * Dal Pozzolo, A., Caelen, O., Waterschoot, R. A., & Bontempi, G. (2015). *Learned lessons in credit card fraud detection from a practitioner perspective*. Expert Systems with Applications, 42(10), 4928-4941.
+* Federal Trade Commission (2025). *New FTC data show a big jump in reported losses to fraud to $12.5 billion in 2024*. [www.ftc.gov](https://www.ftc.gov/news-events/news/press-releases/2025/03/new-ftc-data-show-big-jump-reported-losses-fraud-125-billion-2024#:~:text=Sentinel%20received%206.5%20million%20reports,the%20FTC's%20IdentityTheft.gov%20website)
 * Gama, J., Žliobaitė, I., Bifet, A., Pechenizkiy, M., & Bouchachia, A. (2014). *A survey on concept drift adaptation*. ACM Computing Surveys (CSUR), 46(4), 1-37.
 * PayPal. (2021). *PayPal Holdings, Inc. 2021 Annual Report*. Retrieved from PayPal Investor Relations.
 * Visa. (2023). *Visa Advanced Authorization: Real-time fraud risk scoring*. Retrieved from Visa Newsroom.
