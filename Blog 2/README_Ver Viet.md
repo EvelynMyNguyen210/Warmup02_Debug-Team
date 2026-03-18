@@ -157,9 +157,19 @@ Việc áp dụng Học máy vào quy trình giám sát giao dịch đã chuyể
 
 * **Hệ thống xác thực nâng cao của Visa:** Đây là một trong những mạng lưới ứng dụng AI lớn nhất thế giới. Mỗi giao dịch qua Visa được đánh giá dựa trên hơn **500 thuộc tính** khác nhau chỉ trong vòng **1 miligiây**. Hệ thống phân tích hồ sơ rủi ro của đơn vị chấp nhận thẻ, lịch sử hành vi của chủ thẻ và các dấu hiệu bất thường về mặt địa lý. Theo báo cáo từ Visa (2023), công cụ này giúp ngăn chặn thất thoát tài chính ước tính khoảng **27 tỷ USD** mỗi năm.
 
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/5.1.jpg style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 5.1. Quy trình xử lý giao dịch và phát hiện gian lận trong thời gian thực; nguồn: <a href="https://www.ververica.com/blog/real-time-fraud-detection-using-complex-event-processing">ververica</a></em>
+</p>
+
 * **Mô hình phân tích đa lớp của PayPal:** PayPal sử dụng phương pháp tiếp cận kết hợp giữa các thuật toán Học sâu và quy trình kiểm soát của con người. Bằng cách nhận diện các mẫu hành vi vi mô trong khối lượng giao dịch khổng lồ, PayPal duy trì tỷ lệ gian lận ở mức **0,3%** tổng giá trị giao dịch, thấp hơn đáng kể so với mức trung bình của ngành (PayPal, 2021).
 
 * **Ứng dụng tại thị trường Việt Nam:** Trong bối cảnh thanh toán không dùng tiền mặt bùng nổ, các tổ chức tài chính đang tích hợp **Sinh trắc học hành vi**. Hệ thống ML không chỉ xác thực qua mã OTP mà còn phân tích cách người dùng tương tác với thiết bị (tốc độ gõ phím, thói quen cầm điện thoại, vị trí truy cập thường xuyên) để phát hiện sớm các hành vi chiếm đoạt tài khoản.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/5.2.png style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 5.2. Các chỉ số sinh trắc học hành vi được sử dụng trong xác thực định danh; nguồn: <a href="https://www.biocatch.com/blog/what-is-behavioral-biometrics">BioCatch</a></em>
+</p>
 
 # 6. Những thách thức trong triển khai và vận hành thực tế
 
@@ -173,6 +183,13 @@ Một thách thức lớn trong nghiệp vụ là việc cân bằng giữa an n
 
 ## 6.3. Sự thay đổi đặc tính dữ liệu theo thời gian
 Các phương thức tấn công luôn biến đổi để tìm ra kẽ hở mới. Hiện tượng này được gọi là **Concept Drift** (Gama et al., 2014), khi các đặc tính thống kê của hành vi gian lận thay đổi, khiến mô hình đã huấn luyện bị giảm hiệu suất. Do đó, hệ thống yêu cầu quy trình giám sát (Monitoring) và tái huấn luyện (Retraining) liên tục để thích nghi với các xu hướng gian lận mới.
+
+<p align="center">
+  <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/6.1.png style="margin: 0 auto; display: block;"><br/>
+  <em>Hình 6.1. Minh họa hiện tượng Concept Drift trong các dòng dữ liệu (data streams); nguồn: <a href="https://www.evidentlyai.com/ml-in-production/data-drift">Evidently AI</a></em>
+</p>
+
+Hình 6.1 minh họa cách các mẫu dữ liệu thay đổi theo thời gian, khiến mô hình cũ không còn duy trì được hiệu suất ban đầu.
 
 # 7. Tương lai của AI: Khi "lá chắn" của ngân hàng trở nên thông minh hơn
 
