@@ -167,6 +167,51 @@ After training, the model is deployed for real-time operation when new data arri
 2. The model computes the fraud probability (likelihood that the transaction is normal or suspicious)
 3. If the output exceeds a predefined threshold, the system may trigger an alert or block the transaction
 
+# 5. Real-World Implementation in Banking and Finance
+
+The application of Machine Learning (ML) in transaction monitoring has evolved from isolated experiments into a core component of modern financial security infrastructure.
+
+* **Visa’s Advanced Authorization (VAA):** This is one of the world's largest AI-driven application networks. Every Visa transaction is evaluated against over **500 unique attributes** within just **1 millisecond**. The system analyzes merchant risk profiles, cardholder behavior history, and geographic anomalies. According to a Visa report (2023), this tool helps prevent an estimated **$27 billion** in financial losses annually.
+
+<p align="center">
+  <img src="https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/5.1.jpg" style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 5.1. Real-time transaction processing and fraud detection workflow; source: <a href="https://www.ververica.com/blog/real-time-fraud-detection-using-complex-event-processing">ververica</a></em>
+</p>
+
+* **PayPal’s Multi-layered Analysis Model:** PayPal utilizes a hybrid approach that combines Deep Learning algorithms with human oversight. By identifying micro-behavioral patterns within massive transaction volumes, PayPal maintains a fraud rate of approximately **0.3%** of total transaction value, significantly lower than the industry average (PayPal, 2021).
+
+* **Application in the Vietnamese Market:** Amidst the explosion of cashless payments, financial institutions in Vietnam are integrating **Behavioral Biometrics**. ML systems go beyond simple OTP authentication to analyze how users interact with their devices—such as keystroke dynamics, device handling habits, and frequent access locations—to detect early signs of account takeover (ATO).
+
+<p align="center">
+  <img src="https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/5.2.png" style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 5.2. Behavioral biometric indicators used in identity authentication; source: <a href="https://www.biocatch.com/blog/what-is-behavioral-biometrics">BioCatch</a></em>
+</p>
+
+# 6. Challenges in Real-World Implementation and Operation
+
+Despite providing exceptional efficiency, operating ML models in a banking environment still faces stringent technical and legal hurdles.
+
+## 6.1. Severe Data Imbalance
+In practice, fraudulent transactions typically account for a tiny fraction of the data, often less than **0.1%** of the total dataset. According to research by Dal Pozzolo et al. (2015), this imbalance makes it easy for algorithms to favor the majority class (legitimate transactions), leading to high overall Accuracy but very low actual fraud detection capability (**Recall**). Data engineers must apply specialized techniques like **SMOTE** or adjust **Loss Functions** to optimize the detection of these rare minority patterns.
+
+## 6.2. Controlling the False Positive Rate
+A major operational challenge is balancing security with customer experience. If a model is too sensitive, a high **False Positive Rate** leads to blocking legitimate transactions. This not only causes significant inconvenience but also directly impacts the bank's reputation and erodes customer trust.
+
+## 6.3. Evolution of Data Characteristics (Concept Drift)
+Attack methods constantly evolve to find new loopholes. This phenomenon is known as **Concept Drift** (Gama et al., 2014), where the statistical properties of fraudulent behavior change over time, causing trained models to decline in performance. Consequently, systems require continuous monitoring and retraining to adapt to emerging fraud trends.
+
+<p align="center">
+  <img src="https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog2/6.1.png" style="margin: 0 auto; display: block;"><br/>
+  <em>Figure 6.1. Illustration of Concept Drift in data streams; source: <a href="https://www.evidentlyai.com/ml-in-production/data-drift">Evidently AI</a></em>
+</p>
+
+Figure 6.1 illustrates how data patterns shift over time, preventing older models from maintaining their original performance levels.
+
+## 6.4. Legal Compliance and Transparency Requirements
+In Vietnam, personal data processing must strictly comply with **Decree No. 13/2023/ND-CP**. Although the Decree does not explicitly use the term "algorithmic explanation," the provision for the **Right to object to data processing for automated decisions (Article 9, Clause 8)** indirectly forces banks to be able to interpret and explain their processing logic.
+
+Furthermore, risk management directives for digital banking from the **State Bank of Vietnam (SBV)** increasingly emphasize controlling algorithm-based decisions to protect customer interests. This drives the adoption of **Explainable AI (XAI)** to eliminate algorithmic "black boxes," transforming machine learning outcomes into verifiable, transparent, and fair information.
+
 # 7. The Future of Fraud Detection: When a Bank’s “Shield” Smarter
 
 Technology never stands still, and neither do fraudsters. They are no longer relying on simple manual tricks. To stay ahead, banks are investing in smarter and more adaptive defenses. The future is not about constantly chasing criminals, but about building AI systems that can learn on their own, anticipate risks, and understand data at a much deeper level.
