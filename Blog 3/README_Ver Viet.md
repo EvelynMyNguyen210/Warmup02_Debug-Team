@@ -408,3 +408,175 @@ X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 
 
 
+# 5. Model selection
+
+Trong bài toán phát hiện giao dịch gian lận, mình lựa chọn hướng tiếp cận supervised learning vì dataset đã có nhãn rõ ràng (fraud = 1, non fraud = 0). Điều này giúp mô hình học trực tiếp từ các pattern có sẵn để dự đoán cho dữ liệu mới.
+
+Sau khi tìm hiểu, nhóm mình quyết định chọn hai mô hình chính:
+
+- Random Forest
+- XGBoost (Extreme Gradient Boosting)
+
+## 5.1 Random Forest
+
+Nếu bạn đã làm quen với Machine Learning, chắc hẳn bạn sẽ thấy Random Forest giống như một lựa chọn "quốc dân". Trong các bài toán phát hiện bất thường (anomaly detection) hay phát hiện gian lận (Fraud Detection), dữ liệu thường khá nhiễu và phức tạp, đặc biệt là việc mất cân bằng dữ liệu rất lớn. Random Forest giải quyết vấn đề này bằng cách tạo ra một "rừng" các cây quyết định (decision trees) và đưa ra kết quả dựa trên biểu quyết số đông. Nhờ vậy, mô hình ít khi bị overfitting và ổn định trước các điểm dữ liệu outliers.
+
+Thêm một điểm cộng cực lớn nữa là Random Forest giúp trích xuất được Feature Importance (mức độ quan trọng của từng đặc trưng). Điều này rất ý nghĩa trong thực tế, vì nó giúp giải thích được cho bộ phận nghiệp vụ hiểu: Tại sao hệ thống lại đánh dấu giao dịch này là gian lận? Do số tiền bất thường hay do thời gian quẹt thẻ sai lệch?
+
+<p align="center">
+    <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/5_1_random_forest.png style="margin: 0 auto; display: block; height: 600px;"><br/>
+    <em>Hình 5.1. Random Forest Algorithm</em>
+</p>
+
+
+
+## 5.2 XGBoost
+
+Nếu Random Forest là sự lựa chọn an toàn, thì XGBoost chính là vũ khí hạng nặng của nhóm. Lý do lớn nhất khiến tụi mình nhất quyết phải đưa thuật toán này vào bài viết là nhờ "nằm vùng" học hỏi từ các tiền bối trong cộng đồng Data.
+
+Bất cứ ai từng cày cuốc trong các cuộc thi Data Science trên Kaggle chắc đều quen với việc dùng XGBoost để leo top dễ dàng hơn. Cộng đồng khuyên dùng nó vì thuật toán này không chỉ xử lý dữ liệu dạng bảng (tabular data) cực kỳ tốt mà còn tối ưu hóa tốc độ huấn luyện. Đối với một bài toán siêu mất cân bằng như Fraud Detection (khi mà số lượng giao dịch lừa đảo chỉ chiếm chưa tới 1% tổng dữ liệu), thuật toán tăng cường độ dốc (Gradient Boosting) của XGBoost thể hiện sức mạnh tốt hơn. Nó học hỏi liên tục từ những sai lầm của các cây quyết định trước đó, giúp bắt được những mánh khóe gian lận mà các mô hình thông thường dễ dàng bỏ lọt.
+
+<p align="center">
+    <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/5_2_xgboost.png style="margin: 0 auto; display: block; height: 500px;"><br/>
+    <em>Hình 5.1. XGBoost Algorithm; nguồn: <a href="https://www.researchgate.net/figure/The-Workflow-of-the-XGBoost-Algorithm-This-figure-depicts-the-step-by-step-workflow-of_fig5_383818689">Researchgate</a></em>
+</p>
+```
+
+# 6. Model Training & Evaluation
+
+Sau khi xử lý xong dữ liệu, nhóm mình tiến hành chia tập dữ liệu. Để đảm bảo tính khách quan và có thể theo dõi hiện tượng overfitting trong quá trình huấn luyện, tập dữ liệu được chia làm 3 phần: Train (70%), Validation (10%), và Test (20%). Việc dùng stratify=y là bắt buộc để giữ nguyên tỷ lệ mất cân bằng của nhãn Fraud ở cả 3 tập dữ liệu.
+
+```python
+from sklearn.model_selection import train_test_split
+
+# Split Test (20%)
+X_temp, X_test, y_temp, y_test = train_test_split(
+    X, y, test_size=0.20, random_state=42, stratify=y
+)
+
+# Split Train (70%) & Val (10%)
+X_train, X_val, y_train, y_val = train_test_split(
+    X_temp, y_temp, test_size=0.125, random_state=42, stratify=y_temp
+)
+
+print(f"Total: {len(X)}")
+print(f"Train: {len(X_train)} | Val: {len(X_val)} | Test: {len(X_test)}")
+```
+
+## 6.1. Random Forest 
+
+Với Random Forest, câu hỏi đầu tiên mình đặt ra là: "Nên trồng bao nhiêu cây trong rừng là đủ?". Trồng quá ít thì mô hình học không tới (Underfitting), trồng quá nhiều thì tốn thời gian chạy mà kết quả không tăng thêm bao nhiêu.
+
+Thay vì đoán mò, mình sử dụng OOB Error (Out-of-Bag Error) để thực nghiệm. Bằng cách cho vòng lặp chạy từ 10 đến 200 cây (mỗi bước nhảy 20 cây) và theo dõi xem đến mốc nào thì sai số bắt đầu hội tụ và không giảm thêm nữa.
+
+```python
+import matplotlib.pyplot as plt
+import time
+oob_errors = []
+
+# Try from 10 to 200, step 20
+for i in range(10, 201, 20):
+    start = time.time()
+    rf = RandomForestClassifier(
+        n_estimators=i,
+        max_depth=10,
+        warm_start=True, # Help continue training from the old number of trees
+        oob_score=True,
+        n_jobs=-1,
+        random_state=42,
+        class_weight='balanced'
+    )
+    rf.fit(X_train, y_train)
+    oob_errors.append(1 - rf.oob_score_)
+    print("="*50)
+    print(f"n_estimators: {i} - OOB Error: {1 - rf.oob_score_}")
+    print(f"Training time: {time.time()-start}s")
+
+plt.plot(range(10, 201, 20), oob_errors)
+plt.xlabel("n_estimators")
+plt.ylabel("OOB Error Rate")
+plt.title("Random Forest")
+plt.show()
+```
+
+<p align="center">
+    <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/6_1_rf_training_loss.png style="margin: 0 auto; display: block; height: 500px;"><br/>
+    <em>Hình 6.1. Random Forest Training Loss</em>
+</p>
+
+**Kết quả thực nghiệm**: Nhìn vào biểu đồ OOB Error, tụi mình nhận thấy ở mốc 10 cây, sai số khá cao (>0.0155). Điều thú vị là đường cong bất ngờ "chạm đáy" ở mốc 50 cây. Tuy nhiên, minhf quyết định không chọn con số 50 này. Trong Random Forest, những điểm "rớt đáy" đột ngột thường là do nhiễu ngẫu nhiên (variance) của các tập mẫu, và đối với bài toán mất cân bằng nghiêm trọng như thế này, sai số OOB (dựa trên độ chính xác tổng thể) giảm một chút chưa chắc đã giúp ích cho việc bắt gian lận.
+
+Thay vào đó, mình nhìn vào bức tranh toàn cảnh: Từ mốc 100 trở đi, sai số ổn định và đi ngang quanh mức ~0.0141. Thêm nhiều cây hơn nữa (150 hay 200) chỉ khiến thời gian training tăng gấp đôi, gấp ba mà mô hình không "khôn" lên đáng kể. Do đó, nhóm sẽ chọn n_estimators = 100 là "điểm ngọt" (sweet spot) hoàn hảo nhất, đảm bảo sự cân bằng giữa tốc độ và tính ổn định.
+
+Tuy nhiên, dù quá trình huấn luyện khá trơn tru, khi mang đi đánh giá trên tập Test, Random Forest lại bộc lộ một điểm yếu chí mạng: Precision rớt thảm hại chỉ còn 0.08 (tức là báo động giả quá nhiều)
+
+## 6.2. XGBoost
+Khác với Random Forest (xây các cây độc lập), XGBoost học theo cơ chế tuần tự: cây sau sửa sai cho cây trước. Vì vậy, độ sâu của cây (max_depth) là tham số quan trọng quyết định mô hình có bắt được các chiêu trò gian lận tinh vi hay không.
+
+Nhóm đã chạy thực nghiệm trên dữ liệu raw với 3 mốc max_depth lần lượt là 5, 7, và 10. Kết quả thu được trên tập Test:
+
+- **max_depth = 5**: Thời gian chạy 101s. Mô hình cho ra Recall = 0.83.
+
+- **max_depth = 7**: Thời gian chạy 111s. Recall nhích nhẹ lên 0.84.
+
+- **max_depth = 10**: Thời gian chạy 125s. Recall lên 0.85, đồng thời Precision đạt 0.95, kéo F1-score lên mức 0.90.
+
+**Kiểm chứng sự hội tụ của XGBoost:**
+Tương tự như Random Forest, tụi mình cũng phải xác định xem XGBoost cần bao nhiêu cây (n_estimators). Bằng cách nạp cả tập Train và Val vào eval_set để theo dõi Logloss, nhóm tiến hành vẽ biểu đồ.
+
+```python
+import matplotlib.pyplot as plt
+import time
+from xgboost import XGBClassifier
+
+start = time.time()
+
+model = XGBClassifier(
+    n_estimators=200,
+    learning_rate=0.1,
+    max_depth=10,
+    random_state=42,
+    device='cuda',
+    eval_metric='logloss'
+)
+
+# Train mô hình (XGBoost tự lưu logloss của từng epoch vào kết quả)
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_train, y_train), (X_val, y_val)], # Monitor train and val to see if overfitting.
+    verbose=10 # Print every 20
+)
+
+training_time = time.time() - start
+print(f"Training Time: {training_time:.2f}s")
+
+
+results = model.evals_result()
+epochs = range(1, len(results['validation_0']['logloss']) + 1)
+
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, results['validation_0']['logloss'], label='Train Error')
+plt.plot(epochs, results['validation_1']['logloss'], label='Val Error')
+
+plt.xlabel("n_estimators (Epochs)")
+plt.ylabel("Logloss")
+plt.title("XGBoost Convergence - Logloss Over Epochs")
+plt.legend()
+plt.grid(True)
+plt.show()
+``` 
+
+<p align="center">
+    <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/6_2_xgboost_training_loss.png style="margin: 0 auto; display: block; height: 500px;"><br/>
+    <em>Hình 6.2. XGBoost Training Loss</em>
+</p>
+
+Nhìn vào biểu đồ hội tụ phía trên, các bạn có thể thấy rõ quá trình huấn luyện mô hình thông qua 2 đường: Train Error (màu xanh) và Val Error (màu cam).
+
+- Giai đoạn học hỏi nhanh (0 - 50 cây): Đường Val Error giảm mạnh. Đây là lúc mô hình đang tiếp thu những mẫu hình gian lận rõ ràng nhất.
+
+- Giai đoạn tinh chỉnh (50 - 100 cây): Val Error vẫn tiếp tục giảm nhưng với tốc độ chậm hơn, mô hình đang cố gắng học các chiêu trò lừa đảo phức tạp hơn.
+
+- Giai đoạn hội tụ và nguy cơ Overfitting (100 - 150 cây trở đi): Khi tiến gần đến mốc 150 cây, đường Val Error gần như phẳng lì, báo hiệu mô hình đã đạt đến giới hạn năng lực dự đoán trên dữ liệu mới.
+
+Nếu chúng ta tiếp tục huấn luyện lên 200 vòng, bạn sẽ thấy đường Train Error (màu xanh) vẫn tiếp tục cắm đầu đi xuống, trong khi Val Error không hề suy xuyển. Điều này có nghĩa là mô hình đang bắt đầu "học vẹt" (Overfitting), nó cố gắng ghi nhớ một cách máy móc tập dữ liệu Train mà không mang lại bất kỳ giá trị thực tiễn nào khi dự đoán thực tế, đồng thời làm lãng phí tài nguyên tính toán.
