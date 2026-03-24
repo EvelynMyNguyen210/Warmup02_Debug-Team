@@ -1,3 +1,26 @@
+# 1. Mở đầu
+
+## 1.1. Tính cấp thiết của đề tài
+
+Trong kỉ nguyên kinh tế số, các giao dịch tài chính trực tuyến đã trở thành một phần thiết yếu của đời sống xã hội. Tuy nhiên, sự tiện lợi này cũng đi kèm với rủi ro ngày càng tăng từ các hành vi gian lận tài chính (fraud transactions).
+
+Mỗi năm, các tổ chức ngân hàng và người dùng chịu thiệt hại hàng tỉ USD do các lỗ hổng bảo mật. Gian lận không chỉ gây mất mát về tiền bạc mà còn trực tiếp phá hủy niềm tin của khách hàng vào hệ thống thanh toán. Việc phát hiện sớm các kịch bản tấn công mới giúp củng cố bức tường bảo mật trước các thủ đoạn gian lận ngày càng tinh vi.
+
+Vì lẽ đó, mọi ngân hàng cần phải phát triển một quy trình nhận biết được các giao dịch trái phép này càng sớm càng tốt. Quy trình này gọi là phát hiện giao dịch gian lận, tức quá trình giám sát và phân tích các luồng giao dịch nhằm nhận diện các hành vi bất thường, giả mạo hoặc trái phép ngay trong thời gian thực.
+
+## 1.2. Mục tiêu đề tài
+
+Dự án này tập trung vào việc xây dựng một hệ thống phân loại thông minh dựa trên dữ liệu lịch sử, hướng tới hai mục tiêu cốt lõi:
+
+- **Tối ưu khả năng nhận diện:** Sử dụng sức mạnh của học máy để phát hiện chính xác các giao dịch gian lận vốn thường bị ẩn lấp trong hàng triệu giao dịch thông thường.
+- **Kiểm soát tỷ lệ False Positive:** Việc chặn nhầm một giao dịch hợp lệ của khách hàng gây ra trải nghiệm rất tồi tệ. Dự án ưu tiên tinh chỉnh mô hình để giảm thiểu sai sót này, đảm bảo sự cân bằng giữa tính bảo mật và sự tiện dụng.
+
+## 1.3. Phạm vi nghiên cứu
+
+Dựa án được thực hiện trên tập dữ liệu [PaySim](https://www.kaggle.com/datasets/ealaxi/paysim1?fbclid=IwY2xjawQt4IpleHRuA2FlbQIxMABicmlkETFRQTVMTUtUMEwzR2JFcWZKc3J0YwZhcHBfaWQQMjIyMDM5MTc4ODIwMDg5MgABHt2IJf88BNasTaUnRoEMgKLebwUkbTMWUHinH0pQVV7yfgX2wPPrvsJxk9iN_aem_mbURNxMBhP1k6Iphu4y0XA) &ndash; một bộ dữ liệu mô phỏng các giao dịch tài chính di động (mobile money) cực kỳ sát với thực tế. Dữ liệu bao gồm hơn 6 triệu dòng giao dịch với các loại hình như CASH-IN, CASH-OUT, DEBIT, PAYMENT và TRANSFER.
+
+Ngoài ra, dự án tập trung áp dụng và so sánh hiệu năng của hai thuật toán Ensemble Learning mạnh mẽ là Random Forest và XGBoost để xử lý bài toán phân loại nhị phân trên dữ liệu mất cân bằng (imbalanced data).
+
 # 2. Mô tả tập dữ liệu
 ## 2.1 Nguồn dữ liệu
 Trong dự án này, nhóm sử dụng bộ dữ liệu **PaySim – Mobile Money Transactions**, được công bố trên nền tảng Kaggle. Đây là một dataset mô phỏng các giao dịch tài chính di động, được xây dựng dựa trên dữ liệu thực tế nhưng đã được xử lý và tái tạo nhằm phục vụ cho nghiên cứu.
@@ -60,11 +83,6 @@ Chính vì vậy, trong bối cảnh này, accuracy không còn là thước đo
 Nhìn chung, PaySim là một dataset có cấu trúc rõ ràng, dễ tiếp cận và đủ thông tin để xây dựng các feature liên quan đến hành vi tài chính. Đây là một lựa chọn rất phù hợp để xây dựng mô hình nền tảng cho bài toán phát hiện gian lận.
 
 Tuy nhiên, cần lưu ý rằng đây là dữ liệu mô phỏng (synthetic data), nên các pattern gian lận có thể “đơn giản hóa” so với thực tế. Ngoài ra, dataset còn thiếu các yếu tố ngữ cảnh quan trọng như vị trí, thiết bị hay lịch sử hành vi dài hạn, và cũng không phản ánh được tính chất thời gian thực của hệ thống tài chính. Những hạn chế này cần được cân nhắc khi đánh giá khả năng áp dụng mô hình vào môi trường thực tế.
-
-# Tài liệu tham khảo
-Lopez-Rojas, E., & Axelsson, S. (2014). PaySim: A financial mobile money simulator for fraud detection.
-
-Kaggle. (n.d.). PaySim dataset. Truy cập từ: https://www.kaggle.com/datasets/ealaxi/paysim1/data
 
 # 3. Exploratory Data Analysis (EDA)
 
@@ -580,3 +598,29 @@ Nhìn vào biểu đồ hội tụ phía trên, các bạn có thể thấy rõ 
 - Giai đoạn hội tụ và nguy cơ Overfitting (100 - 150 cây trở đi): Khi tiến gần đến mốc 150 cây, đường Val Error gần như phẳng lì, báo hiệu mô hình đã đạt đến giới hạn năng lực dự đoán trên dữ liệu mới.
 
 Nếu chúng ta tiếp tục huấn luyện lên 200 vòng, bạn sẽ thấy đường Train Error (màu xanh) vẫn tiếp tục cắm đầu đi xuống, trong khi Val Error không hề suy xuyển. Điều này có nghĩa là mô hình đang bắt đầu "học vẹt" (Overfitting), nó cố gắng ghi nhớ một cách máy móc tập dữ liệu Train mà không mang lại bất kỳ giá trị thực tiễn nào khi dự đoán thực tế, đồng thời làm lãng phí tài nguyên tính toán.
+
+# 7. Những mặt hạn chế và hướng phát triển
+
+Mặc dù các mô hình Random Forest và XGBoost đã chứng minh được hiệu quả trong việc phân loại giao dịch, dự án vẫn tồn tại những thách thức kỹ thuật cần được giải quyết để có thể triển khai trong môi trường thực tế.
+
+## 7.1. Những mặt hạn chế
+
+**Mất cân bằng dữ liệu.** Tỉ lệ các giao dịch gian lận trong tập dữ liệu PaySim chiếm một phần rất nhỏ so với giao dịch hợp lệ. Sự chênh lệch cực lớn này có thể khiến mô hình bị "thiên kiến" (bias) về phía lớp đa số, dẫn đến việc bỏ sót các hành vi gian lận tinh vi nếu không có các kỹ thuật xử lý chuyên sâu như SMOTE hay Cost-sensitive learning.
+
+**Concept Drift (Sự thay đổi về quy luật gian lận).** Các mô hình học máy được huấn luyện trên dữ liệu tĩnh, trong khi các phương thức gian lận luôn thay đổi theo thời gian để vượt qua các hệ thống phòng thủ. Khi các đặc điểm của giao dịch gian lận thay đổi, hiệu suất của mô hình có xu hướng suy giảm (model degradation), đòi hỏi một cơ chế tự thích nghi liên tục.
+
+**Tác động của False Positive lên người dùng.** Việc dự đoán sai một giao dịch hợp lệ thành gian lận gây ra những phiền hà trực tiếp cho người dùng, chẳng hạn, một giao dịch chính thống của khách hàng bị đánh giá nhầm thành gian lận dẫn đến khóa thẻ đột ngột hoặc giao dịch bị từ chối. Trong lĩnh vực ngân hàng, việc giảm thiểu tỷ lệ False Positive là một thách thức lớn vì nó đòi hỏi sự cân bằng giữa tính bảo mật nghiêm ngặt và trải nghiệm khách hàng mượt mà. 
+
+## 7.2. Đề xuất hướng phát triển
+
+Để nâng cao năng lực của hệ thống, các hướng phát triển sau đây sẽ được xem xét:
+
+**Sử dụng Deep Learning.** Thay vì chỉ phân tích các giao dịch đơn lẻ, việc sử dụng mạng nơ-ron truy hồi như Long Short-Term Memory (LSTM) cho phép mô hình học được các chuỗi hành vi của người dùng theo thời gian. Điều này cực kỳ hữu ích trong việc phát hiện các mẫu gian lận diễn ra qua nhiều bước liên tiếp.
+
+**Tích hợp hệ thống streaming thời gian thực.** Tích hợp mô hình vào các đường ống dữ liệu trực tuyến , như Apache Kafka hoặc Spark Streaming, để cho phép chấm điểm rủi ro và ngăn chặn gian lận ngay tại thời điểm giao dịch phát sinh. Hệ thống này sẽ đảm bảo tính phản ứng tức thời, giảm thiểu thiệt hại tài chính trước khi giao dịch hoàn tất.
+
+# Tài liệu tham khảo
+
+Lopez-Rojas, E., & Axelsson, S. (2014). PaySim: A financial mobile money simulator for fraud detection.
+
+Kaggle. (n.d.). PaySim dataset. Truy cập từ: https://www.kaggle.com/datasets/ealaxi/paysim1/data
