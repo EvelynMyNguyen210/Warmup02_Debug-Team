@@ -56,6 +56,8 @@ However, it is important to note that PaySim is a synthetic dataset. As such, fr
 These limitations should be carefully considered when evaluating the model’s applicability to real-world financial environments.
 
 # References
+Lopez-Rojas, E., & Axelsson, S. (2014). PaySim: A financial mobile money simulator for fraud detection.
 
+Kaggle. (n.d.). PaySim dataset. Retrieved from https://www.kaggle.com/datasets/ealaxi/paysim1/data
 
 
