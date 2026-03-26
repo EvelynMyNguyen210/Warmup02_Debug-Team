@@ -591,6 +591,98 @@ Nhìn vào biểu đồ hội tụ phía trên, các bạn có thể thấy rõ 
 
 Nếu chúng ta tiếp tục huấn luyện lên 200 vòng, bạn sẽ thấy đường Train Error (màu xanh) vẫn tiếp tục cắm đầu đi xuống, trong khi Val Error không hề suy xuyển. Điều này có nghĩa là mô hình đang bắt đầu "học vẹt" (Overfitting), nó cố gắng ghi nhớ một cách máy móc tập dữ liệu Train mà không mang lại bất kỳ giá trị thực tiễn nào khi dự đoán thực tế, đồng thời làm lãng phí tài nguyên tính toán.
 
+## 6.3. Đánh giá trên Raw Data (Dữ liệu gốc):
+Để thấy rõ tầm quan trọng của việc xử lý dữ liệu (Data Preprocessing & Feature Engineering), mình đã thử cho hai mô hình so sánh với nhau ngay trên tập Data Raw (dữ liệu thô chưa qua làm sạch, chỉ mã hóa chữ thành số các cột phân loại và giữ nguyên sự mất cân bằng).
+
+1. Kết quả của Random Forest trên Raw Data
+
+Do dữ liệu lệch quá nặng, mình phải dùng tham số class_weight='balanced' để ép Random Forest chú ý vào các giao dịch lừa đảo. Và đây là kết quả:
+
+```
+            --- RANDOM FOREST - RAW DATA ---
+              precision    recall  f1-score   support
+
+           0     1.0000    0.9859    0.9929   1270881
+           1     0.0835    0.9903    0.1540      1643
+
+    accuracy                         0.9860   1272524
+   macro avg     0.5417    0.9881    0.5735   1272524
+weighted avg     0.9988    0.9860    0.9918   1272524
+```
+Nhìn vào chỉ số Recall (0.99), có vẻ như Random Forest đã bắt được 99% kẻ gian. Nhưng hãy nhìn sang Precision (0.08) – một con số thảm họa kéo theo F1-score rớt xuống chỉ 0.15. Điều này có nghĩa là mô hình đang nhắm mắt "bắt nhầm hơn bỏ sót". Cứ báo động 100 ca lừa đảo thì có tới 92 ca là khách hàng vô tội bị hệ thống khóa thẻ oan. Trong dữ liệu chứa nhiều nhiễu và mất cân bằng nghiêm trọng, Random Forest dường như gặp khó khăn trong việc phân biệt ranh giới giữa hai lớp, từ đó dẫn đến hiệu năng tổng thể thiếu ổn định và không thực sự đáng tin cậy.
+
+2. Kết quả của XGBoost trên Raw Data
+
+Trái ngược với kết quả trên, XGBoost cho thấy vì sao nó thường được ưa chuộng trong cộng đồng nghiên cứu và các cuộc thi như Kaggle. Ngay cả khi làm việc với dữ liệu thô chưa được xử lý kỹ lưỡng, thuật toán Gradient Boosting vẫn có khả năng khai thác và học được những mẫu hình (patterns) tiềm ẩn trong dữ liệu.
+
+Khả năng xây dựng mô hình theo từng bước lặp, kết hợp các cây yếu (weak learners) để hiệu chỉnh sai số của nhau, giúp XGBoost dần cải thiện hiệu năng và nắm bắt tốt hơn các trường hợp gian lận phức tạp. Nhờ đó, mô hình không chỉ duy trì được mức độ phát hiện hợp lý mà còn kiểm soát tốt hơn tỷ lệ dự đoán sai, mang lại sự cân bằng đáng kể giữa các chỉ số đánh giá.
+
+```
+                --- XGBOOST - RAW DATA ---
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00   1270881
+           1       0.95      0.85      0.90      1643
+
+    accuracy                           1.00   1272524
+   macro avg       0.98      0.92      0.95   1272524
+weighted avg       1.00      1.00      1.00   1272524
+```
+
+Kết quả cho thấy XGBoost gần như tự điều chỉnh hiệu quả trước bài toán mất cân bằng đầy thách thức. Với Precision đạt 0.95 và Recall ở mức 0.85, mô hình không chỉ phát hiện được phần lớn các trường hợp gian lận mà còn duy trì tỷ lệ báo động giả ở mức rất thấp. 
+
+Sự cân bằng giữa hai chỉ số này phản ánh khả năng phân biệt lớp tốt hơn đáng kể so với Random Forest trong cùng điều kiện. Ở giai đoạn này, XGBoost thể hiện vai trò vượt trội, chiếm ưu thế rõ rệt về hiệu năng tổng thể.
+
+## 6.4. Đánh giá trên Processed Data
+
+Mặc dù XGBoost thể hiện rất ấn tượng trên dữ liệu thô, một nguyên tắc nền tảng trong Data Science vẫn luôn đúng: “Garbage in, garbage out.” Chất lượng dữ liệu đầu vào có ảnh hưởng quyết định đến hiệu năng mô hình.
+
+Vì vậy, mình tiến hành huấn luyện lại cả hai mô hình trên tập liệu đã được làm sạch, chuẩn hóa và đặc biệt được bổ sung các đặc trưng mới thông qua Feature Engineering, chẳng hạn như các biến sai lệch số dư (errorOrig, errorDest), vốn mang nhiều thông tin phân biệt quan trọng.
+
+Kết quả thu được cho thấy tác động rõ rệt của quá trình này: khi dữ liệu đầu vào được cải thiện, mô hình không chỉ học tốt hơn mà còn khai thác hiệu quả hơn các tín hiệu tiềm ẩn. Điều đáng chú ý là hiệu năng giữa hai mô hình bắt đầu thay đổi.
+
+1. Kết quả của XGBoost trên Processed Data
+
+```
+                --- XGBOOST - PROCESSED DATA ---
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    552439
+           1       0.89      0.99      0.94      1643
+
+    accuracy                           1.00    554082
+   macro avg       0.94      1.00      0.97    554082
+weighted avg       1.00      1.00      1.00    554082
+```
+
+Đúng như kỳ vọng, khi được huấn luyện trên tập dữ liệu đã được làm sạch và bổ sung các đặc trưng giàu thông tin, hiệu năng của XGBoost được cải thiện rõ rệt. Recall tăng từ 0.85 lên 0.99, trong khi Precision ở mức 0.89 vẫn chấp nhận được, cho thấy mô hình không chỉ phát hiện hiệu quả các giao dịch gian lận mà còn kiểm soát tốt tỷ lệ cảnh báo sai. Đây là một kết quả rất thuyết phục và hoàn toàn khả thi cho việc triển khai trong thực tế.
+
+Tuy nhiên, câu chuyện chưa dừng lại ở đây. Kết quả của Random Forest ở phần tiếp theo mới thực sự mang đến một bất ngờ đáng chú ý.
+
+2. Kết quả của Random Forest trên Processed Data
+
+```
+                --- RANDOM FOREST - PROCESSED DATA ---
+             precision    recall  f1-score   support
+
+           0     1.0000    1.0000    1.0000    552439
+           1     0.9933    0.9970    0.9951      1643
+
+    accuracy                         1.0000    554082
+   macro avg     0.9967    0.9985    0.9976    554082
+weighted avg     1.0000    1.0000    1.0000    554082
+```
+
+Kết quả này cho thấy một sự cải thiện đáng kể, trong khi mô hình Random Forest chuyển từ trạng thái mất cân bằng nghiêm trọng (làm cho Precision = 0.08) sang hiệu năng gần như tối ưu trên cả ba chỉ số. Đáng chú ý, mô hình đạt Precision 0.9933 và Recall 0.9970 đối với lớp gian lận, cho thấy khả năng phát hiện gần như toàn bộ các trường hợp gian lận đồng thời giảm thiểu tối đa số lượng cảnh báo sai.
+
+Sự cải thiện vượt bậc của Random Forest có thể được lý giải dựa trên mức độ phù hợp giữa mô hình và đặc trưng dữ liệu. Trong bộ dữ liệu ban đầu, ranh giới giữa hai lớp chưa được thể hiện rõ ràng. Khi đó, mô hình như XGBoost phát huy hiệu quả nhờ cơ chế boosting, cho phép từng bước hiệu chỉnh sai số và tăng cường năng lực dự báo.
+
+Tuy nhiên, sau khi thực hiện Feature Engineering, các đặc trưng mới như errorOrig và errorDest đã làm nổi bật sự khác biệt giữa giao dịch hợp lệ và gian lận. Random Forest với nền tảng là các cây quyết định dựa trên các phép chia nhị phân, có thể khai thác trực tiếp các đặc trưng có khả năng phân tách mạnh. Nhờ vậy, mô hình học được ranh giới phân loại một cách trực tiếp và hiệu quả mà không cần dựa vào các cơ chế tối ưu phức tạp.
+
+Từ kết quả thực nghiệm có thể rút ra một số nhận định quan trọng. Thứ nhất, các mô hình mạnh như XGBoost vẫn duy trì được hiệu năng tốt ngay cả khi dữ liệu chưa được xử lý tối ưu. Thứ hai, Feature Engineering tốt có khả năng làm thay đổi đáng kể kết quả, giúp các mô hình đơn giản hơn như Random Forest đạt được hiệu năng vượt trội.
+
+Nói cách khác, việc lựa chọn thuật toán là cần thiết, nhưng chất lượng xử lý dữ liệu mới là yếu tố đóng vai trò quyết định đối với giới hạn hiệu năng của mô hình.
+
 # 7. Những mặt hạn chế và hướng phát triển
 
 Dù việc tập trung vào xử lý dữ liệu và xây dựng đặc trưng đã cải thiện đáng kể hiệu suất mô hình, dự án vẫn vấp phải những rào cản kỹ thuật nhất định cần được tối ưu hóa trong tương lai.
