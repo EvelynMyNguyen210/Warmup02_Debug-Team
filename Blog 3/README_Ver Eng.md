@@ -416,6 +416,236 @@ smote = SMOTE(random_state=42)
 X_train_res, y_train_res = smote.fit_resample(X_train, y_train)
 ```
 
+# 5. Model selection
+
+For the fraud detection problem, we chose a supervised learning approach because the dataset already comes with clear labels (fraud = 1, non-fraud = 0). This allows the model to learn directly from existing patterns and make predictions on new data.
+
+After some research, our team decided to focus on two main models:
+
+- Random Forest
+- XGBoost (Extreme Gradient Boosting)
+
+## 5.1 Random Forest
+
+If you have already worked with Machine Learning, Random Forest will probably feel like one of those “safe and familiar” choices. In anomaly detection or fraud detection tasks, the data is often noisy and complex, especially because of the severe class imbalance. Random Forest handles this by building a “forest” of decision trees and making predictions based on majority voting. As a result, the model is less likely to overfit and is relatively stable in the presence of outliers.
+
+Another huge advantage is that Random Forest can provide Feature Importance, which shows how important each feature is. This matters a lot in practice, because it helps explain to the business side why the system flagged a transaction as fraud. Was it because of an unusual amount, or because the card swipe time looked suspicious?
+
+<p align="center"> <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/5_1_random_forest.png style="margin: 0 auto; display: block; height: 600px;"><br/> <em>Figure 5.1. Random Forest Algorithm</em> </p>
+
+## 5.2 XGBoost
+
+If Random Forest is the safe choice, then XGBoost is our heavy weapon. The biggest reason we insisted on including this algorithm in the article was because we learned from experienced people in the data community.
+
+Anyone who has spent time competing in Data Science contests on Kaggle is probably familiar with XGBoost as a tool that helps push rankings higher. The community recommends it because this algorithm not only works extremely well on tabular data, but also optimizes training speed effectively. For an extremely imbalanced problem like Fraud Detection, where fraudulent transactions account for less than 1% of the dataset, XGBoost’s Gradient Boosting approach shows stronger performance. It learns continuously from the mistakes of previous decision trees, helping it catch fraudulent tricks that simpler models might easily miss.
+
+<p align="center"> <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/5_2_xgboost.png style="margin: 0 auto; display: block; height: 500px;"><br/> <em>Figure 5.2. XGBoost Algorithm; source: <a href="https://www.researchgate.net/figure/The-Workflow-of-the-XGBoost-Algorithm-This-figure-depicts-the-step-by-step-workflow-of_fig5_383818689">ResearchGate</a></em> </p>
+
+# 6. Model Training & Evaluation
+
+## 6.1 Random Forest
+
+With Random Forest, the first question we asked was: “How many trees are enough?” If we use too few trees, the model underfits. If we use too many, training becomes slower without bringing much improvement.
+
+Instead of guessing, we used OOB Error (Out-of-Bag Error) to run an experiment. We looped from 10 to 200 trees, increasing by 20 each time, and observed at which point the error started to converge and stopped decreasing.
+
+```python
+import matplotlib.pyplot as plt
+import time
+oob_errors = []
+
+# Try from 10 to 200, step 20
+for i in range(10, 201, 20):
+    start = time.time()
+    rf = RandomForestClassifier(
+        n_estimators=i,
+        max_depth=10,
+        warm_start=True, # Help continue training from the old number of trees
+        oob_score=True,
+        n_jobs=-1,
+        random_state=42,
+        class_weight='balanced'
+    )
+    rf.fit(X_train, y_train)
+    oob_errors.append(1 - rf.oob_score_)
+    print("="*50)
+    print(f"n_estimators: {i} - OOB Error: {1 - rf.oob_score_}")
+    print(f"Training time: {time.time()-start}s")
+
+plt.plot(range(10, 201, 20), oob_errors)
+plt.xlabel("n_estimators")
+plt.ylabel("OOB Error Rate")
+plt.title("Random Forest")
+plt.show()
+```
+
+<p align="center"> <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/6_1_rf_training_loss.png style="margin: 0 auto; display: block; height: 500px;"><br/> <em>Figure 6.1. Random Forest Training Loss</em> </p>
+
+Experimental result: Looking at the OOB Error chart, we noticed that at 10 trees, the error was still relatively high (>0.0155). Interestingly, the curve unexpectedly hit its lowest point at 50 trees. However, we decided not to choose that number. In Random Forest, sudden “bottom-outs” like that are often caused by random variance in the sampled data, and for a heavily imbalanced problem like this, a small drop in OOB error, which is based on overall accuracy, does not necessarily mean better fraud detection.
+
+Instead, we looked at the bigger picture: from 100 trees onward, the error stayed stable around ~0.0141. Adding more trees after that, such as 150 or 200, only increased training time two or three times without making the model noticeably smarter. Therefore, our team chose n_estimators = 100 as the sweet spot, balancing speed and stability.
+
+However, even though the training process was smooth, when we evaluated it on the Test set, Random Forest revealed a critical weakness: Precision dropped dramatically to just 0.08, meaning it produced too many false alarms.
+
+## 6.2 XGBoost
+
+Unlike Random Forest, which builds independent trees, XGBoost learns sequentially: each new tree corrects the mistakes of the previous one. Because of that, tree depth (max_depth) is an important parameter that determines whether the model can capture subtle fraud patterns.
+
+Our team ran experiments on the raw data with three max_depth values: 5, 7, and 10. The results on the Test set were:
+
+max_depth = 5: Training time was 101s. The model achieved Recall = 0.83.
+max_depth = 7: Training time was 111s. Recall increased slightly to 0.84.
+max_depth = 10: Training time was 125s. Recall reached 0.85, while Precision also climbed to 0.95, pushing the F1-score to 0.90.
+
+**Checking XGBoost convergence:**
+Similar to Random Forest, we also needed to determine how many trees XGBoost required. By feeding both the Train and Validation sets into eval_set to monitor Logloss, we plotted the learning curve.
+
+```python
+import matplotlib.pyplot as plt
+import time
+from xgboost import XGBClassifier
+
+start = time.time()
+
+model = XGBClassifier(
+    n_estimators=200,
+    learning_rate=0.1,
+    max_depth=10,
+    random_state=42,
+    device='cuda',
+    eval_metric='logloss'
+)
+
+# Train mô hình (XGBoost tự lưu logloss của từng epoch vào kết quả)
+model.fit(
+    X_train, y_train,
+    eval_set=[(X_train, y_train), (X_val, y_val)], # Monitor train and val to see if overfitting.
+    verbose=10 # Print every 20
+)
+
+training_time = time.time() - start
+print(f"Training Time: {training_time:.2f}s")
+
+
+results = model.evals_result()
+epochs = range(1, len(results['validation_0']['logloss']) + 1)
+
+plt.figure(figsize=(10, 6))
+plt.plot(epochs, results['validation_0']['logloss'], label='Train Error')
+plt.plot(epochs, results['validation_1']['logloss'], label='Val Error')
+
+plt.xlabel("n_estimators (Epochs)")
+plt.ylabel("Logloss")
+plt.title("XGBoost Convergence - Logloss Over Epochs")
+plt.legend()
+plt.grid(True)
+plt.show()
+``` 
+
+<p align="center"> <img src=https://github.com/EvelynMyNguyen210/Warmup02_Debug_Team/blob/main/Collection_Blog3/6_2_xgboost_training_loss.png style="margin: 0 auto; display: block; height: 500px;"><br/> <em>Figure 6.2. XGBoost Training Loss</em> </p>
+
+Looking at the convergence chart above, you can clearly see the training process through two curves: Train Error (blue) and Val Error (orange).
+
+Rapid learning phase (0 - 50 trees): The Val Error drops sharply. This is when the model is learning the most obvious fraud patterns.
+Refinement phase (50 - 100 trees): Val Error continues to decrease, but more slowly, as the model starts learning more complex fraud techniques.
+Convergence and overfitting risk phase (100 - 150 trees and beyond): As we approach 150 trees, the Val Error becomes almost flat, signaling that the model has reached its predictive limit on unseen data.
+
+If we continue training to 200 rounds, you will see that the Train Error (blue) keeps dropping, while the Val Error barely changes. That means the model is starting to memorize the training set, which brings no real world benefit for prediction and only wastes computing resources.
+
+## 6.3 Evaluation on Raw Data
+
+To highlight the importance of data preprocessing and feature engineering, I compared the two models directly on the raw dataset, meaning the data had not been cleaned or transformed, except for encoding categorical columns into numbers while keeping the original imbalance.
+
+1. Random Forest results on Raw Data
+
+Because the dataset is extremely imbalanced, I had to use class_weight='balanced' to force Random Forest to pay more attention to fraudulent transactions. Here are the results:
+
+```
+            --- RANDOM FOREST - RAW DATA ---
+              precision    recall  f1-score   support
+
+           0     1.0000    0.9859    0.9929   1270881
+           1     0.0835    0.9903    0.1540      1643
+
+    accuracy                         0.9860   1272524
+   macro avg     0.5417    0.9881    0.5735   1272524
+weighted avg     0.9988    0.9860    0.9918   1272524
+```
+
+At first glance, the Recall score (0.99) makes it seem like Random Forest caught 99% of the fraud cases. But look at Precision (0.08), a disastrous number that pulls the F1-score down to just 0.15. This means the model is aggressively catching almost everything, including many legitimate transactions. For every 100 fraud alerts, about 92 are actually innocent customers being wrongly blocked. In a dataset with heavy noise and severe imbalance, Random Forest seems to struggle to separate the two classes, which leads to unstable and unreliable overall performance.
+
+2. XGBoost results on Raw Data
+
+In contrast, XGBoost shows why it is so popular in the research community and in competitions like Kaggle. Even when working with raw data that has not been carefully processed, Gradient Boosting is still able to extract and learn hidden patterns.
+
+Its step-by-step learning process, where weak learners are combined to correct one another’s errors, helps XGBoost gradually improve performance and capture more complex fraud cases. As a result, the model not only maintains a strong fraud detection rate, but also keeps false positives under better control, achieving a much better balance across evaluation metrics.
+
+```
+                --- XGBOOST - RAW DATA ---
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00   1270881
+           1       0.95      0.85      0.90      1643
+
+    accuracy                           1.00   1272524
+   macro avg       0.98      0.92      0.95   1272524
+weighted avg       1.00      1.00      1.00   1272524
+```
+
+The result shows that XGBoost almost automatically adapts well to this challenging imbalance problem. With Precision at 0.95 and Recall at 0.85, the model detects most fraudulent transactions while keeping the false alarm rate very low.
+
+The balance between these two metrics reflects much stronger class separation ability compared with Random Forest under the same conditions. At this stage, XGBoost clearly outperforms and dominates in overall performance.
+
+## 6.4 Evaluation on Processed Data
+
+Although XGBoost performed impressively on the raw data, one fundamental principle in Data Science always holds true: “Garbage in, garbage out.” The quality of the input data has a decisive impact on model performance.
+
+That is why I retrained both models on the cleaned and standardized dataset, which was also enriched with new features through Feature Engineering, such as balance-difference variables (errorOrig, errorDest) that carry highly informative signals for classification.
+
+The results clearly show the impact of this step: once the input data improved, the models not only learned better, but also exploited the hidden signals more effectively. What is especially interesting is that the performance gap between the two models began to change.
+
+1. XGBoost results on Processed Data
+
+```
+                --- XGBOOST - PROCESSED DATA ---
+              precision    recall  f1-score   support
+
+           0       1.00      1.00      1.00    552439
+           1       0.89      0.99      0.94      1643
+
+    accuracy                           1.00    554082
+   macro avg       0.94      1.00      0.97    554082
+weighted avg       1.00      1.00      1.00    554082
+```
+
+As expected, when trained on the cleaned dataset with informative engineered features, XGBoost improved significantly. Recall increased from 0.85 to 0.99, while Precision remained at 0.89, which is still acceptable. This shows that the model not only detects fraudulent transactions effectively, but also keeps false alerts at a reasonable level. This is a very convincing result and is entirely feasible for real-world deployment.
+
+However, the story does not end here. The result of Random Forest in the next section is the one that brings the real surprise.
+
+2. Random Forest results on Processed Data
+
+```
+                --- RANDOM FOREST - PROCESSED DATA ---
+             precision    recall  f1-score   support
+
+           0     1.0000    1.0000    1.0000    552439
+           1     0.9933    0.9970    0.9951      1643
+
+    accuracy                         1.0000    554082
+   macro avg     0.9967    0.9985    0.9976    554082
+weighted avg     1.0000    1.0000    1.0000    554082
+```
+
+This result shows a remarkable improvement. Random Forest moved from a severely imbalanced state, where Precision was only 0.08, to nearly optimal performance across all three metrics. Notably, the model achieved Precision of 0.9933 and Recall of 0.9970 for the fraud class, showing that it could detect nearly all fraudulent cases while minimizing false alerts to the greatest extent possible.
+
+This dramatic improvement can be explained by how well the model fits the data’s feature structure. In the original dataset, the boundary between the two classes was not clearly expressed. In that case, models like XGBoost can perform well because boosting allows each tree to gradually correct errors and strengthen predictive power.
+
+However, after Feature Engineering, new variables such as errorOrig and errorDest made the difference between legitimate and fraudulent transactions much more obvious. Random Forest, which is built on decision trees that rely on binary splits, can directly exploit strongly separating features. As a result, the model learns the classification boundary in a direct and effective way without needing more complex optimization mechanisms.
+
+From these experiments, we can draw several important conclusions. First, strong models like XGBoost can still perform well even when the data has not been perfectly processed. Second, good Feature Engineering can dramatically change the outcome and allow simpler models like Random Forest to reach outstanding performance.
+
+In other words, choosing the right algorithm is important, but the quality of data processing is the factor that ultimately defines the model’s performance ceiling.
+
 # 7. Limitations and Future Development Directions
 
 Although the focus on data processing and feature building has significantly improved model performance, the project still faces certain technical hurdles that need to be optimized in the future.
