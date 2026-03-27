@@ -230,12 +230,12 @@ Kết quả được trả về hai bảng sau:
 
 **Xét biến isErrorOrig:**
 - Với error = 1:
-  * Fraud: 99% -> Giao dịch fraud hầu như không có error
-  * Non-fraud: 0.5%
-
-- Với error = 0:
   * Fraud: 90% -> Giao dịch bình thường tồn tại error cao hơn
   * Non-fraud: 9% 
+
+- Với error = 0:
+  * Fraud: 99% -> Giao dịch fraud hầu như không có error
+  * Non-fraud: 0.5%
 
 *Qua phân tích cho thấy, với giao dịch fraud, sai số giao dịch gần như không có, số dư giao dịch luôn đúng. Trong khi đó với giao dịch non-fraud, sai số giao dịch có tỉ lệ cao. Từ đó ta có thể giả định rằng, với giao dịch fraud, sai số tài khoản được đã được điều chỉnh để tránh bị phát hiện (trong trường hợp ta dựa vào sai số tài khoản sau giao dịch). Với giao dịch non-fraud, sai số tài khoản cao.*
 
