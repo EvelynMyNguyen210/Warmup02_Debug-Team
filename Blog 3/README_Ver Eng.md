@@ -230,12 +230,12 @@ The results are:
 
 **Analysis of isErrorDest:**
 - With error = 1:
-  * Fraud: 99% -> Fraud transactions almost never have errors
-  * Non-fraud: 0.5%
+   * Fraud: 90% -> Normal transactions have higher error occurrence
+   * Non-fraud: 9% 
 
 - With error = 0:
-  * Fraud: 90% -> Normal transactions have higher error occurrence
-  * Non-fraud: 9% 
+  * Fraud: 99% -> Fraud transactions almost never have errors
+  * Non-fraud: 0.5%
 
 *This suggests that in fraud transactions, balance errors are nearly absent, meaning balances are carefully adjusted to avoid detection (when relying on post-transaction balance checks). In contrast, non-fraud transactions tend to have higher error rates*
 
