@@ -8,7 +8,7 @@ In the problem of fraud transaction detection, the biggest challenge lies not on
 
 Instead of focusing on fine-tuning model parameters, this project focuses on optimizing the quality of input data. Specific objectives include:
 
-**EDA (Exploratory Data Analytics.** Explore hidden relationships between variables to uncover traces of fraudulent behavior on the dataset.
+**EDA (Exploratory Data Analytics).** Explore hidden relationships between variables to uncover traces of fraudulent behavior on the dataset.
 
 **Feature Engineering.** Constructing new variables from raw data to enhance the algorithm's classification capabilities.
 
@@ -228,14 +228,14 @@ The results are:
 
 -> This indicates that isErrorDest is a strong feature for distinguishing between normal and abnormal transactions. isErrorDest=1 is associated with fraud transactions, while isErrorDest=0 corresponds to non-fraud.
 
-**Analysis of isErrorDest:**
+**Analysis of isErrorOrig:**
 - With error = 1:
-  * Fraud: 99% -> Fraud transactions almost never have errors
-  * Non-fraud: 0.5%
+   * Fraud: 90% -> Normal transactions have higher error occurrence
+   * Non-fraud: 9% 
 
 - With error = 0:
-  * Fraud: 90% -> Normal transactions have higher error occurrence
-  * Non-fraud: 9% 
+  * Fraud: 99% -> Fraud transactions almost never have errors
+  * Non-fraud: 0.5%
 
 *This suggests that in fraud transactions, balance errors are nearly absent, meaning balances are carefully adjusted to avoid detection (when relying on post-transaction balance checks). In contrast, non-fraud transactions tend to have higher error rates*
 
