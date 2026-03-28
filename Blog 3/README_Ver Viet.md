@@ -497,7 +497,7 @@ plt.show()
     <em>Hình 6.1. Random Forest Training Loss</em>
 </p>
 
-**Kết quả thực nghiệm**: Nhìn vào biểu đồ OOB Error, tụi mình nhận thấy ở mốc 10 cây, sai số khá cao (>0.0155). Điều thú vị là đường cong bất ngờ "chạm đáy" ở mốc 50 cây. Tuy nhiên, minhf quyết định không chọn con số 50 này. Trong Random Forest, những điểm "rớt đáy" đột ngột thường là do nhiễu ngẫu nhiên (variance) của các tập mẫu, và đối với bài toán mất cân bằng nghiêm trọng như thế này, sai số OOB (dựa trên độ chính xác tổng thể) giảm một chút chưa chắc đã giúp ích cho việc bắt gian lận.
+**Kết quả thực nghiệm**: Nhìn vào biểu đồ OOB Error, tụi mình nhận thấy ở mốc 10 cây, sai số khá cao (>0.0155). Điều thú vị là đường cong bất ngờ "chạm đáy" ở mốc 50 cây. Tuy nhiên, mình quyết định không chọn con số 50 này. Trong Random Forest, những điểm "rớt đáy" đột ngột thường là do nhiễu ngẫu nhiên (variance) của các tập mẫu, và đối với bài toán mất cân bằng nghiêm trọng như thế này, sai số OOB (dựa trên độ chính xác tổng thể) giảm một chút chưa chắc đã giúp ích cho việc bắt gian lận.
 
 Thay vào đó, mình nhìn vào bức tranh toàn cảnh: Từ mốc 100 trở đi, sai số ổn định và đi ngang quanh mức ~0.0141. Thêm nhiều cây hơn nữa (150 hay 200) chỉ khiến thời gian training tăng gấp đôi, gấp ba mà mô hình không "khôn" lên đáng kể. Do đó, nhóm sẽ chọn n_estimators = 100 là "điểm ngọt" (sweet spot) hoàn hảo nhất, đảm bảo sự cân bằng giữa tốc độ và tính ổn định.
 
